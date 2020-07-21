@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import './question.dart';
+import './result.dart';
+// import './question.dart';
+// import './answer.dart';
+import './quiz.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -15,45 +19,82 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  // static const questions = const [
+  final _questions = const [
+    {
+      'question': 'What\'s your fav color1',
+      'answer': [
+        {'text': 'red', 'score': 1},
+        {'text': 'yellow', 'score': 3},
+        {'text': 'white', 'score': 5},
+        {'text': 'green', 'score': 9},
+      ]
+    },
+    {
+      'question': 'What\'s your fav food2',
+      'answer': [
+        {'text': 'a', 'score': 1},
+        {'text': 'g', 'score': 3},
+        {'text': 'h', 'score': 5},
+        {'text': 'r', 'score': 9},
+      ]
+    },
+    {
+      'question': 'What\'s your fav player3',
+      'answer': [
+        {'text': 'c', 'score': 1},
+        {'text': 'v', 'score': 3},
+        {'text': 'b', 'score': 5},
+        {'text': 'f', 'score': 9},
+      ]
+    },
+  ];
   var quesindex = 0;
+  var _totalscore = 0;
 
-  void answerques() {
+  void _resetquiz() {
+    setState(() {
+      quesindex = 0;
+      _totalscore = 0;
+    });
+  }
+
+  void _answerques(int score) {
+    _totalscore += score;
     setState(() {
       quesindex = quesindex + 1;
     });
     print(quesindex);
+    Fluttertoast.showToast(
+        msg: "fgfgf",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 3,
+        backgroundColor: Colors.red,
+        textColor: Colors.white);
+    if (quesindex < _questions.length) {
+      print("we dont have more questions");
+    }
   }
 
-  void answermethod() {
-    print("helloworld");
-  }
+  // void answermethod() {
+  //   print("helloworld");
+  // }
 
   Widget build(BuildContext context) {
-    var questions = ['What\'s your fav color1', 'What your fav food2'];
+    // questions = [];
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
             title: Text("Hellomm"),
           ),
-          body: Column(
-            children: <Widget>[
-              Text(questions[quesindex]),
-              RaisedButton(
-                child: Text("myans1"),
-                onPressed: answermethod,
-              ),
-              RaisedButton(
-                child: Text("myans2"),
-                onPressed: answerques,
-              ),
-              RaisedButton(
-                child: Text("myans3"),
-                onPressed: () {
-                  print("ans3");
-                },
-              ),
-            ],
-          )),
+          body: quesindex < _questions.length
+              ? Quiz(
+                  answerques: _answerques,
+                  quesindex: quesindex,
+                  questions: _questions,
+                )
+              : Result(_totalscore, _resetquiz)),
     );
   }
 }
